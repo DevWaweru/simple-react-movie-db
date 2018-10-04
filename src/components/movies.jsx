@@ -35,15 +35,23 @@ class FetchMovies extends Component {
   };
   handleGenreSelect = genre => {
     // console.log(genre);
-    this.setState({selectedGenre:genre})
+    this.setState({ selectedGenre: genre });
   };
   render() {
     const { length: count } = this.state.movies;
-    const { currentPage, pageSize, movies: allMovies } = this.state;
+    const {
+      currentPage,
+      selectedGenre,
+      pageSize,
+      movies: allMovies
+    } = this.state;
     if (count === 0)
       return <p className="text-center">There are no movies in the database</p>;
 
-    const movies = paginate(allMovies, currentPage, pageSize);
+    const filtered = selectedGenre
+      ? allMovies.filter(m => m.genre._id === selectedGenre._id)
+      : allMovies;
+    const movies = paginate(filtered, currentPage, pageSize);
     return (
       <React.Fragment>
         <div className="container">
@@ -58,7 +66,7 @@ class FetchMovies extends Component {
               />
             </div>
             <div className="col">
-              <p className="mt-4">Showing {count} movies in the database </p>
+              <p className="mt-4">Showing {filtered.length} movies in the database </p>
               <table className="table">
                 <thead>
                   <tr>
@@ -96,7 +104,7 @@ class FetchMovies extends Component {
                 </tbody>
               </table>
               <Pagination
-                itemsCount={count}
+                itemsCount={filtered.length}
                 pageSize={pageSize}
                 onPageChange={this.handlePageChange}
                 currentPage={currentPage}
