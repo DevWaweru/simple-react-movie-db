@@ -34,7 +34,8 @@ class FetchMovies extends Component {
     this.setState({ currentPage: page });
   };
   handleGenreSelect = genre => {
-    console.log(genre);
+    // console.log(genre);
+    this.setState({selectedGenre:genre})
   };
   render() {
     const { length: count } = this.state.movies;
@@ -51,6 +52,7 @@ class FetchMovies extends Component {
               <ListGroup
                 items={this.state.genres}
                 onItemSelect={this.handleGenreSelect}
+                selectedItem={this.state.selectedGenre}
                 // textProperty='name'
                 // valueProperty='_id'
               />
