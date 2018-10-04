@@ -44,15 +44,20 @@ class FetchMovies extends Component {
     // console.log(path);
     this.setState({sortColumn});
   }
-  render() {
-    const { length: count } = this.state.movies;
-    const { currentPage, selectedGenre, pageSize, movies: allMovies, sortColumn } = this.state;
-    if (count === 0) return <p className="text-center">There are no movies in the database</p>;
-
+  getPagedData = () => {
+    const { currentPage, selectedGenre, pageSize, movies: allMovies, sortColumn } = this.state
     const filtered = selectedGenre && selectedGenre._id ? allMovies.filter(m => m.genre._id === selectedGenre._id): allMovies;
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order])
     const movies = paginate(sorted, currentPage, pageSize);
 
+    return { totalCount: filtered.length, data: movies }
+  }
+  render() {
+    const { length: count } = this.state.movies;
+    const { currentPage, pageSize, sortColumn } = this.state;
+    if (count === 0) return <p className="text-center">There are no movies in the database</p>;
+
+    const { totalCount, data: movies } = this.getPagedData();
     return (
       <React.Fragment>
         <div className="container">
@@ -64,9 +69,9 @@ class FetchMovies extends Component {
               />
             </div>
             <div className="col">
-              <p className="mt-4">Showing {filtered.length} movies in the database </p>
+              <p className="mt-4">Showing {totalCount} movies in the database </p>
               <MovieTable movies={movies} onDelete={this.handleDelete} onLike={this.handleLike} onSort={this.handleSort} sortColumn={sortColumn}/>
-              <Pagination itemsCount={filtered.length} pageSize={pageSize} onPageChange={this.handlePageChange} currentPage={currentPage} />
+              <Pagination itemsCount={totalCount} pageSize={pageSize} onPageChange={this.handlePageChange} currentPage={currentPage} />
             </div>
           </div>
         </div>
