@@ -40,15 +40,8 @@ class FetchMovies extends Component {
     // console.log(genre);
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
-  handleSort = (path) =>{
+  handleSort = (sortColumn) =>{
     // console.log(path);
-    const sortColumn = {...this.state.sortColumn}
-    if (sortColumn.path === path) {
-      sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : "asc";
-    } else {
-      sortColumn.path = path;
-      sortColumn.order = 'asc';
-    }
     this.setState({sortColumn});
   }
   render() {
@@ -72,7 +65,7 @@ class FetchMovies extends Component {
             </div>
             <div className="col">
               <p className="mt-4">Showing {filtered.length} movies in the database </p>
-              <MovieTable movies={movies} onDelete={this.handleDelete} onLike={this.handleLike} onSort={this.handleSort}/>
+              <MovieTable movies={movies} onDelete={this.handleDelete} onLike={this.handleLike} onSort={this.handleSort} sortColumn={sortColumn}/>
               <Pagination itemsCount={filtered.length} pageSize={pageSize} onPageChange={this.handlePageChange} currentPage={currentPage} />
             </div>
           </div>
